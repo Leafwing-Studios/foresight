@@ -10,8 +10,8 @@ assignees: ''
 
 Pick one of:
 
-- TEMPLATE_OPTION
-- TEMPLATE_OPTION
+- spell idea
+- monster idea
 
 ## What niche does this fill?
 

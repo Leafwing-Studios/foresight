@@ -1,14 +1,14 @@
 [package]
-name = "template"
-description = "A Bevy + mdbook enabled template repo to build on."
+name = "foresight"
+description = "A classic terminal RPG about RNG manipulation."
 version = "0.0.0"
 authors = ["Leafwing Studios"]
 homepage = "https://leafwing-studios.com"
-repository = "https://github.com/leafwing-studios/template-repo"
+repository = "https://github.com/leafwing-studios/foresight"
 license = "MIT OR Apache-2.0"
 edition = "2021"
-categories = ["games", "game-development"]
-keywords = ["bevy"]
+categories = ["games"]
+keywords = ["bevy", "rpg"]
 exclude = ["assets/**/*", "tools/**/*", ".github/**/*"]
 resolver = "2"
 
@@ -34,14 +34,9 @@ bevy = { version = "0.6", default-features = false}
 
 
 [lib]
-name = "template_lib"
+name = "foresight_lib"
 path = "src/lib.rs"
 
 [[bin]]
-name = "template_bin"
+name = "foresight_bin"
 path = "src/main.rs"
-
-[[bench]]
-name = "entity_spawning"
-path = "benches/entity_spawning.rs"
-harness = false
