@@ -54,6 +54,7 @@ Both restored to full after each fight.
   - Reduce enemy dodge by 20-25% for one turn
 
 ### Free
+
 - status
   - show known stats side-by-side
 - about
@@ -101,6 +102,7 @@ Both restored to full after each fight.
     - the provided guide doesn't know what to make of this, but gives a few known values to help the player get started
 
 ## Enemies
+
 - About the same
   - Mana
   - Crit chance
@@ -111,4 +113,4 @@ Both restored to full after each fight.
   - Spell fail
 - Way higher
   - Damage numbers
-  - Health
+  - health
