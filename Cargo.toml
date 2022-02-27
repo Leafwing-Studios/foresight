@@ -22,6 +22,7 @@ members = ["./", "tools/ci"]
 bevy = { version = "0.6", default-features = false, features = ["dynamic"]}
 bevy_console = "0.2.5"
 bevy_system_graph = "0.1"
+bevy_egui = "0.11"
 
 [patch.crates-io]
 # Custom fork, based off of https://github.com/RichoDemus/bevy-console/pull/4
