@@ -6,3 +6,4 @@
 use bevy::prelude::*;
 
 pub mod console;
+mod rng;
