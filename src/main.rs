@@ -17,5 +17,6 @@ fn main() {
         .add_plugins(DefaultPlugins)
         // Foresight game plugins
         .add_plugin(ui::UiPlugin)
+        .add_plugin(rng::RNGPlugin)
         .run();
 }

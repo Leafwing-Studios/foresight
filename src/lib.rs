@@ -5,5 +5,5 @@
 
 use bevy::prelude::*;
 
-mod rng;
+pub mod rng;
 pub mod ui;

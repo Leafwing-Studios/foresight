@@ -23,6 +23,7 @@ bevy = { version = "0.6", default-features = false, features = ["dynamic"]}
 leafwing_terminal = {git = "https://github.com/Leafwing-Studios/leafwing_terminal"}
 bevy_system_graph = "0.1"
 bevy_egui = "0.11"
+arraydeque = "0.4"
 
 [lib]
 name = "foresight_lib"
