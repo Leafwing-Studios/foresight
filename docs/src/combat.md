@@ -4,12 +4,14 @@ A classical turn-based fantasy combat system.
 
 ## Resources
 
-- life: 40+4*str
+- life: 40+4*str for the player, monster health is just set as a value
 - mana: 50+int
 
 Both restored to full after each fight.
 
 ## Actions
+
+\* indicates that they are learned from monsters
 
 ### Major
 
@@ -19,13 +21,16 @@ Both restored to full after each fight.
     - monsters are 2-3 shotting the player
     - player is taking about 10 hits to kill the monster
   - heavy
-    - single high damage
-    - 3 RNG (damage, crit, dodge)
+    - 8-10 damage (+ 2*str)
+    - 3 RNG (dodge, damage, crit)
   - light
-    - two attacks
-    - 5 RNG (damage, damage, crit, crit, dodge)
+    - two attacks: 3-6 (+str) damage each
+    - 5 RNG (dodge, damage, damage, crit, crit)
 - cast a spell
   - spell fail chance: base_chance - int (compared directly to the u8 rng, not a percentage)
+- pocket sand!*
+  - 1 RNG (dodge)
+  - Reduce enemy damage by 50% for three turns
 
 ### Minor
 
@@ -41,6 +46,12 @@ Both restored to full after each fight.
 - scan
   - 1 RNG
   - gives you one new stat from the enemy at random (chosen uniformly from stats you haven't yet seen this fight)
+- focus*
+  - 0 RNG
+  - Reduce your spell fail chance by 20
+- trip*
+  - 2 RNG (dodge)
+  - Reduce enemy dodge by 20-25% for one turn
 
 ### Free
 - status
@@ -57,6 +68,8 @@ Both restored to full after each fight.
 - health
 - mana
 - number of times the RNG advances
+- scan
+- flee
 
 ## Stats
 
