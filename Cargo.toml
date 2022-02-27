@@ -20,17 +20,12 @@ members = ["./", "tools/ci"]
 
 [dependencies]
 bevy = { version = "0.6", default-features = false, features = ["dynamic"]}
+bevy_console = "0.2.5"
+bevy_system_graph = "0.1"
 
 [patch.crates-io]
-# We can override the bevy version with remote or local versions
-# This method causes less pain to downstream users trying to work off your revisions
-#bevy = { git = "https://github.com/bevyengine/bevy" }
-#bevy = { path = "../bevy" }
-
-[dev-dependencies]
-criterion = "0.3"
-# We can use a different feature set of Bevy for our library vs our examples and tests
-bevy = { version = "0.6", default-features = false}
+# Custom fork, based off of https://github.com/RichoDemus/bevy-console/pull/4
+bevy_console = {git = "https://github.com/alice-i-cecile/bevy-console"}
 
 
 [lib]

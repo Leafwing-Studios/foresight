@@ -5,15 +5,4 @@
 
 use bevy::prelude::*;
 
-/// A plugin
-pub struct HelloWorldPlugin;
-
-impl Plugin for HelloWorldPlugin {
-    fn build(&self, app: &mut App) {
-        app.add_startup_system(hello_world);
-    }
-}
-
-fn hello_world() {
-    println!("Hello, World!");
-}
+pub mod console;
