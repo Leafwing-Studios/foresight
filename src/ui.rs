@@ -1,7 +1,6 @@
 //! Displays text in the console and accepts input
 use bevy::prelude::*;
-use bevy_egui::egui::RichText;
-use bevy_egui::egui::{self, Color32, Frame};
+use bevy_egui::egui::{self, Color32, Frame, RichText, Separator};
 use bevy_egui::EguiContext;
 use leafwing_terminal::{TerminalConfiguration, TerminalPlugin};
 
@@ -43,7 +42,7 @@ fn spawn_rng_window(mut egui_context: ResMut<EguiContext>, windows: Res<Windows>
         .fixed_pos([left, top])
         .title_bar(false)
         .frame(Frame {
-            fill: Color32::DARK_GREEN,
+            fill: Color32::BLACK,
             ..Default::default()
         })
         .show(egui_context.ctx_mut(), |ui| {
