@@ -16,6 +16,6 @@ fn main() {
         // Standard Bevy functionality
         .add_plugins(DefaultPlugins)
         // Foresight game plugins
-        .add_plugin(console::ConsolePlugin)
+        .add_plugin(ui::UiPlugin)
         .run();
 }
