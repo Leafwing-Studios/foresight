@@ -11,23 +11,23 @@ pub struct UiPlugin;
 impl Plugin for UiPlugin {
     fn build(&self, app: &mut App) {
         app.add_plugin(TerminalPlugin)
-            .add_startup_system(configure_terminal)
+            .add_system_to_stage(CoreStage::PreUpdate, sync_full_screen)
             .add_system(spawn_rng_window);
     }
 }
 
 const CONSOLE_FRACTION: f32 = 2. / 3.;
 
-fn configure_terminal(mut config: ResMut<TerminalConfiguration>, windows: Res<Windows>) {
-    // Match the size of the window
-    let window = windows.get_primary().unwrap();
+fn sync_full_screen(mut config: ResMut<TerminalConfiguration>, windows: Res<Windows>) {
+    if windows.is_changed() {
+        let window = windows.get_primary().unwrap();
 
-    //config.left_pos = 0.0 - (1.0 - CONSOLE_FRACTION) * window.width();
-    config.left_pos = 0.0;
-    config.top_pos = 0.0;
+        config.left_pos = 0.0;
+        config.top_pos = 0.0;
 
-    config.width = CONSOLE_FRACTION * window.width();
-    config.height = window.height();
+        config.width = window.width() * CONSOLE_FRACTION;
+        config.height = window.height();
+    }
 }
 
 fn spawn_rng_window(mut egui_context: ResMut<EguiContext>, windows: Res<Windows>) {
