@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_egui::egui::RichText;
 use bevy_egui::egui::{self};
 use bevy_egui::EguiContext;
-use leafwing_terminal::{ConsoleConfiguration, ConsoleOpen};
+use leafwing_terminal::ConsoleConfiguration;
 
 /// Controls the display of text on the console
 pub struct ConsolePlugin;
@@ -19,11 +19,7 @@ impl Plugin for ConsolePlugin {
 const COMMAND_LINE_HEIGHT: f32 = 30.;
 const CONSOLE_FRACTION: f32 = 2. / 3.;
 
-fn configure_console(
-    mut config: ResMut<ConsoleConfiguration>,
-    windows: Res<Windows>,
-    mut console_open: ResMut<ConsoleOpen>,
-) {
+fn configure_console(mut config: ResMut<ConsoleConfiguration>, windows: Res<Windows>) {
     // Match the size of the window
     let window = windows.get_primary().unwrap();
 
@@ -32,10 +28,6 @@ fn configure_console(
     config.width = CONSOLE_FRACTION * window.width();
     // Need a bit of space for the command line
     config.height = window.height() - COMMAND_LINE_HEIGHT;
-
-    // The console is always is open
-    console_open.open = true;
-    config.keys = Vec::default();
 }
 
 fn spawn_rng_window(mut egui_context: ResMut<EguiContext>, windows: Res<Windows>) {
