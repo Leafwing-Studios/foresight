@@ -20,14 +20,9 @@ members = ["./", "tools/ci"]
 
 [dependencies]
 bevy = { version = "0.6", default-features = false, features = ["dynamic"]}
-bevy_console = "0.2.5"
+leafwing_terminal = {git = "https://github.com/Leafwing-Studios/leafwing_terminal"}
 bevy_system_graph = "0.1"
 bevy_egui = "0.11"
-
-[patch.crates-io]
-# Custom fork, based off of https://github.com/RichoDemus/bevy-console/pull/4
-bevy_console = {git = "https://github.com/alice-i-cecile/bevy-console"}
-
 
 [lib]
 name = "foresight_lib"

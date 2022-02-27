@@ -1,16 +1,16 @@
 //! Displays text in the console and accepts input
 use bevy::prelude::*;
-use bevy_console::{ConsoleConfiguration, ConsoleOpen};
-use bevy_egui::egui::{self, Frame};
-use bevy_egui::egui::{Color32, RichText};
+use bevy_egui::egui::RichText;
+use bevy_egui::egui::{self};
 use bevy_egui::EguiContext;
+use leafwing_terminal::{ConsoleConfiguration, ConsoleOpen};
 
 /// Controls the display of text on the console
 pub struct ConsolePlugin;
 
 impl Plugin for ConsolePlugin {
     fn build(&self, app: &mut App) {
-        app.add_plugin(bevy_console::ConsolePlugin)
+        app.add_plugin(leafwing_terminal::ConsolePlugin)
             .add_startup_system(configure_console)
             .add_system(spawn_rng_window);
     }
