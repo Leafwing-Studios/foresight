@@ -220,6 +220,128 @@ mod resource_impls {
     }
 }
 
+mod damage {
+    use super::Life;
+    use bevy::prelude::Component;
+
+    /// Damage that is or could be dealt by an attack
+    #[derive(Component, Clone, Debug, PartialEq)]
+    pub struct Damage {
+        min: u8,
+        max: u8,
+        actual: Option<u8>,
+    }
+
+    impl Damage {
+        /// Creates a new struct that stores potential damage
+        pub fn new(min: u8, max: u8) -> Damage {
+            assert!(max >= min);
+
+            Damage {
+                min,
+                max,
+                actual: None,
+            }
+        }
+
+        /// The minimum damage that could be dealt
+        pub fn min(&self) -> u8 {
+            self.min
+        }
+
+        /// The maximum damage that could be dealt
+        pub fn max(&self) -> u8 {
+            self.max
+        }
+
+        /// Determine how much damage is dealt based on a provided `rng`
+        pub fn roll(&mut self, rng: u8) -> u8 {
+            let fraction: f32 = rng as f32 / 255.;
+            let range = self.max - self.min;
+
+            let damage_f32 = min as f32 + fraction * range as f32;
+            self.damage_dealt = Some(damage_f32 as u8);
+            damage_f32 as u8
+        }
+
+        /// Reset the amount of damage that is dealt
+        pub fn reset(&mut self) {
+            self.damage_dealt = None;
+        }
+
+        /// Get the amount of damage that is rolled
+        ///
+        /// # Panics
+        /// Panics if damage was not rolled, or was reset before this method was called.
+        pub fn damage_rolled(&self) -> u8 {
+            self.damage_dealt.unwrap()
+        }
+    }
+
+    impl Sub<Damage> for Life {
+        type Output = Life;
+
+        fn sub(self, damage: Damage) -> Life {
+            let new = self;
+            if let Some(damage_dealt) = damage.actual {
+                self - damage_dealt
+            }
+        }
+    }
+
+    impl Add<u8> for Damage {
+        type Output = Damage;
+
+        fn add(self, int: u8) -> Damage {
+            let new = self.clone();
+
+            Damage {
+                actual: self.actual.checked_add(int).unwrap_or(u8::MAX),
+                ..self
+            }
+        }
+    }
+
+    impl Sub<u8> for Damage {
+        type Output = Damage;
+
+        fn sub(self, scaling: u8) -> Damage {
+            let new = self.clone();
+
+            Damage {
+                actual: self.actual.checked_sub(scaling).unwrap_or(u8::MIN),
+                ..self
+            }
+        }
+    }
+
+    impl Mul<u8> for Damage {
+        type Output = Damage;
+
+        fn mul(self, scaling: u8) -> Damage {
+            let new = self.clone();
+
+            Damage {
+                actual: self.actual.checked_mul(scaling).unwrap_or(u8::MAX),
+                ..self
+            }
+        }
+    }
+
+    impl Div<u8> for Damage {
+        type Output = Damage;
+
+        fn div(self, scaling: u8) -> Damage {
+            let new = self.clone();
+
+            Damage {
+                actual: self.actual.checked_div(scaling).unwrap_or(u8::MIN),
+                ..self
+            }
+        }
+    }
+}
+
 mod attributes {
     use bevy::ecs::prelude::Component;
 
@@ -313,6 +435,27 @@ mod derived_stats {
         }
 
         /// Given a provided `rng` input, is the attack dodged?
+        pub fn roll(&self, rng: u8) -> bool {
+            self.0 >= rng
+        }
+    }
+
+    /// The chance that a particular spell succeeds
+    pub struct SpellSuccess(u8);
+
+    impl SpellSuccess {
+        /// The marginal fraction of  spells that will succeed for each point of intelligence gained
+        const SCALING: f32 = 1. / 100.;
+
+        /// Creates a new [`Flee`] component
+        pub fn new(base_chance: u8, intelligence: Intelligence) -> Self {
+            let fraction: f32 =
+                (base_chance as f32 + Self::SCALING * intelligence.0 as f32).clamp(0., 1.);
+
+            SpellSuccess(255 * fraction as u8)
+        }
+
+        /// Given a provided `rng` input, does the spell succeed?
         pub fn roll(&self, rng: u8) -> bool {
             self.0 >= rng
         }
