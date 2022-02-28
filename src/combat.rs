@@ -223,6 +223,7 @@ mod resource_impls {
 mod damage {
     use super::Life;
     use bevy::prelude::Component;
+    use core::ops::*;
 
     /// Damage that is or could be dealt by an attack
     #[derive(Component, Clone, Debug, PartialEq)]
@@ -259,14 +260,14 @@ mod damage {
             let fraction: f32 = rng as f32 / 255.;
             let range = self.max - self.min;
 
-            let damage_f32 = min as f32 + fraction * range as f32;
-            self.damage_dealt = Some(damage_f32 as u8);
+            let damage_f32 = self.min as f32 + fraction * range as f32;
+            self.actual = Some(damage_f32 as u8);
             damage_f32 as u8
         }
 
         /// Reset the amount of damage that is dealt
         pub fn reset(&mut self) {
-            self.damage_dealt = None;
+            self.actual = None;
         }
 
         /// Get the amount of damage that is rolled
@@ -274,7 +275,7 @@ mod damage {
         /// # Panics
         /// Panics if damage was not rolled, or was reset before this method was called.
         pub fn damage_rolled(&self) -> u8 {
-            self.damage_dealt.unwrap()
+            self.actual.unwrap()
         }
     }
 
@@ -282,9 +283,10 @@ mod damage {
         type Output = Life;
 
         fn sub(self, damage: Damage) -> Life {
-            let new = self;
             if let Some(damage_dealt) = damage.actual {
                 self - damage_dealt
+            } else {
+                self
             }
         }
     }
@@ -293,11 +295,13 @@ mod damage {
         type Output = Damage;
 
         fn add(self, int: u8) -> Damage {
-            let new = self.clone();
-
-            Damage {
-                actual: self.actual.checked_add(int).unwrap_or(u8::MAX),
-                ..self
+            if let Some(damage) = self.actual {
+                Damage {
+                    actual: Some(damage.checked_add(int).unwrap_or(u8::MAX)),
+                    ..self
+                }
+            } else {
+                self
             }
         }
     }
@@ -305,12 +309,14 @@ mod damage {
     impl Sub<u8> for Damage {
         type Output = Damage;
 
-        fn sub(self, scaling: u8) -> Damage {
-            let new = self.clone();
-
-            Damage {
-                actual: self.actual.checked_sub(scaling).unwrap_or(u8::MIN),
-                ..self
+        fn sub(self, int: u8) -> Damage {
+            if let Some(damage) = self.actual {
+                Damage {
+                    actual: Some(damage.checked_sub(int).unwrap_or(u8::MIN)),
+                    ..self
+                }
+            } else {
+                self
             }
         }
     }
@@ -319,11 +325,13 @@ mod damage {
         type Output = Damage;
 
         fn mul(self, scaling: u8) -> Damage {
-            let new = self.clone();
-
-            Damage {
-                actual: self.actual.checked_mul(scaling).unwrap_or(u8::MAX),
-                ..self
+            if let Some(damage) = self.actual {
+                Damage {
+                    actual: Some(damage.checked_mul(scaling).unwrap_or(u8::MAX)),
+                    ..self
+                }
+            } else {
+                self
             }
         }
     }
@@ -332,11 +340,13 @@ mod damage {
         type Output = Damage;
 
         fn div(self, scaling: u8) -> Damage {
-            let new = self.clone();
-
-            Damage {
-                actual: self.actual.checked_div(scaling).unwrap_or(u8::MIN),
-                ..self
+            if let Some(damage) = self.actual {
+                Damage {
+                    actual: Some(damage.checked_div(scaling).unwrap_or(u8::MIN)),
+                    ..self
+                }
+            } else {
+                self
             }
         }
     }

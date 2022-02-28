@@ -6,5 +6,6 @@
 use bevy::prelude::*;
 
 pub mod combat;
-mod rng;
+pub mod combat_interface;
+pub mod rng;
 pub mod ui;
