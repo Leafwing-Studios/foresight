@@ -2,115 +2,47 @@
 
 A classical turn-based fantasy combat system.
 
-## Resources
+## Core stats
+- Level: 1-10
+- Health: 30+5*level
+- Mana: 50 (always and forever)
+- AP/turn: 3 (always and forever)
+- Special defenses
+  - Consitution: 1-40%
+  - Dexterity: 1-40%
+  - Mind: 1-40%
+- Dodge bonus: 10 + level + levelup bonuses (max 20)% ??
 
-- life: 40+4*str for the player, monster health is just set as a value
-- mana: 50+int
+## Core actions
 
-Both restored to full after each fight.
-
-## Actions
-
-\* indicates that they are learned from monsters
-
-### Major
-
-- attack
-  - crit chance: floor(2.5*agl)
-  - base damage is around 8 + str (but check the scaling on this, and double check the math)
-    - monsters are 2-3 shotting the player
-    - player is taking about 10 hits to kill the monster
-  - heavy
-    - 8-10 damage (+ 2*str)
-    - 3 RNG (dodge, damage, crit)
-  - light
-    - two attacks: 3-6 (+str) damage each
-    - 5 RNG (dodge, damage, damage, crit, crit)
-- cast a spell
-  - spell fail chance: base_chance - int (compared directly to the u8 rng, not a percentage)
-- pocket sand!*
-  - 1 RNG (dodge)
-  - Reduce enemy damage by 50% for three turns
-
-### Minor
-
-- utility spells
-- dodge
-  - O RNG
-  - Increases dodge chance by 20%
-  - Base dodge chance: 10+agl
-- flee
+- Scan (1AP)
   - 1 RNG
-  - on a success, hp and such are restored, but you have to start the fight again
-  - flee chance: 15+4*agl?
-- scan
-  - 1 RNG
-  - gives you one new stat from the enemy at random (chosen uniformly from stats you haven't yet seen this fight)
-- focus*
-  - 0 RNG
-  - Reduce your spell fail chance by 20
-- trip*
-  - 2 RNG (dodge)
-  - Reduce enemy dodge by 20-25% for one turn
+  - Reveal one enemy stat at random
+  - Stats revealed are *not* reset on death
+  - If all stats have been revealed, then isn't allowed
+- Longsword swing (2AP)
+  - 4 RNG (hit, dodge, damage, crit)
+  - Hit bonus: ??
+  - Damage: 10-13
+  - Crit chance: 3%
 
-### Free
-
-- status
-  - show known stats side-by-side
-- about
-  - shows percentages and damage values for your actions
-
-## Hooks
-
-- damage
-- dodge
-- spell failure chance
-- crits
-- health
-- mana
-- number of times the RNG advances
-- scan
-- flee
-
-## Stats
-
-- ranges from 0-20 inclusive
-- player starts at 0, 0, 0
-- strength
-  - increases basic attack damage
-  - increases max life
-- agility
-  - increases dodge chance
-  - increases crit chance
-- intelligence
-  - increase max mana
-  - reduces spell failure chance
+## Core spells
+- We should have one
 
 ## RNG
 
 - range of 0-255
-- current value and next few values are shown to players
+- current value, previous 10-ish, and next 10-ish values are shown to players
+- Additonally, there is a log of what values were used for what actions, which updates as the RNG ticks
+  - Ex: "Using ${number} to determine ${actor}'s ${action}"
 - higher numbers are generally good for actor
-  - attacker rolls for spells
+  - attacker rolls for spells/attacks
   - defender rolls for dodge chance
   - then, damage rolled by attacker
-- A value of 255 is always a failure, regardless of actual chance
+- NTH: A value of 255 is always a failure, regardless of actual chance
 - order of RNG usages must be very clear
+  - "Press enter to advance" after every RNG usage/
 - enemies select their next action based on combination of internal logic + RNG
   - most enemies have "blocks", where the rng range is chopped up into sections, and each section gets an action
   - but at least one enemy does (rng % n) to determine which action to take
     - the provided guide doesn't know what to make of this, but gives a few known values to help the player get started
-
-## Enemies
-
-- About the same
-  - Mana
-  - Crit chance
-  - Options available
-    - They can flee, but the chance of selecting is really low (the chance of success is quite high though)
-- A little better
-  - Dodge
-  - Spell fail
-- Way higher
-  - Damage numbers
-  - health
