@@ -12,7 +12,16 @@ mod resources {
     use super::{Intelligence, Strength};
 
     /// A type that stores a resource with a current and max value
-    pub trait Resource: Add<u8> + Sub<u8> + AddAssign<u8> + SubAssign<u8> + Sized + Clone {
+    pub trait Resource:
+        Add<u8>
+        + Sub<u8>
+        + AddAssign<u8>
+        + SubAssign<u8>
+        + PartialOrd<u8>
+        + PartialEq<u8>
+        + Sized
+        + Clone
+    {
         /// Creates a new struct with `max` and `current` equal to `max`
         #[must_use]
         fn new(max: u8) -> Self;
@@ -129,11 +138,49 @@ mod resources {
             }
         }
     }
+
+    /// The number of points a creature has to spend on its actions
+    #[derive(Component, Clone, Debug, PartialEq, PartialOrd)]
+    pub struct ActionPoints {
+        current: u8,
+        max: u8,
+    }
+
+    impl Resource for ActionPoints {
+        fn new(max: u8) -> Self {
+            Self { current: max, max }
+        }
+
+        fn current(&self) -> u8 {
+            self.current
+        }
+
+        fn max(&self) -> u8 {
+            self.max
+        }
+
+        fn set_current(&mut self, current: u8) {
+            if self.max <= current {
+                self.current = current;
+            } else {
+                self.current = self.max;
+            }
+        }
+
+        fn set_max(&mut self, max: u8) {
+            self.max = max;
+
+            if max > self.current {
+                self.current = self.max;
+            }
+        }
+    }
 }
 
 mod resource_impls {
     use super::Resource;
-    use super::{Life, Mana};
+    use super::{ActionPoints, Life, Mana};
+    use std::cmp::{Ordering, PartialEq, PartialOrd};
     use std::ops::{Add, AddAssign, Sub, SubAssign};
 
     impl Add<u8> for Life {
@@ -178,6 +225,18 @@ mod resource_impls {
         }
     }
 
+    impl PartialEq<u8> for Life {
+        fn eq(&self, other: &u8) -> bool {
+            self.current() == *other
+        }
+    }
+
+    impl PartialOrd<u8> for Life {
+        fn partial_cmp(&self, other: &u8) -> Option<Ordering> {
+            self.current().partial_cmp(other)
+        }
+    }
+
     impl Add<u8> for Mana {
         type Output = Mana;
 
@@ -217,6 +276,72 @@ mod resource_impls {
     impl SubAssign<u8> for Mana {
         fn sub_assign(&mut self, rhs: u8) {
             *self = self.clone() - rhs;
+        }
+    }
+
+    impl PartialEq<u8> for Mana {
+        fn eq(&self, other: &u8) -> bool {
+            self.current() == *other
+        }
+    }
+
+    impl PartialOrd<u8> for Mana {
+        fn partial_cmp(&self, other: &u8) -> Option<Ordering> {
+            self.current().partial_cmp(other)
+        }
+    }
+
+    impl Add<u8> for ActionPoints {
+        type Output = ActionPoints;
+
+        fn add(self, rhs: u8) -> Self::Output {
+            let mut new = self.clone();
+
+            if let Some(new_value) = self.current().checked_add(rhs) {
+                new.set_current(new_value);
+            } else {
+                new.set_current(u8::MAX);
+            }
+            new
+        }
+    }
+
+    impl Sub<u8> for ActionPoints {
+        type Output = ActionPoints;
+
+        fn sub(self, rhs: u8) -> Self::Output {
+            let mut new = self.clone();
+
+            if let Some(new_value) = self.current().checked_sub(rhs) {
+                new.set_current(new_value);
+            } else {
+                new.set_current(u8::MIN);
+            }
+            new
+        }
+    }
+
+    impl AddAssign<u8> for ActionPoints {
+        fn add_assign(&mut self, rhs: u8) {
+            *self = self.clone() + rhs;
+        }
+    }
+
+    impl SubAssign<u8> for ActionPoints {
+        fn sub_assign(&mut self, rhs: u8) {
+            *self = self.clone() - rhs;
+        }
+    }
+
+    impl PartialEq<u8> for ActionPoints {
+        fn eq(&self, other: &u8) -> bool {
+            self.current() == *other
+        }
+    }
+
+    impl PartialOrd<u8> for ActionPoints {
+        fn partial_cmp(&self, other: &u8) -> Option<Ordering> {
+            self.current().partial_cmp(other)
         }
     }
 }

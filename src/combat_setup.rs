@@ -1,6 +1,6 @@
 //! Transition in and out of combat
 
-use crate::combat_mechanics::{Damage, Life, Resource};
+use crate::combat_statistics::{Damage, Life, Resource};
 use crate::creatures::{Enemy, Player};
 use crate::GameState;
 use bevy::prelude::*;

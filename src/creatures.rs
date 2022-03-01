@@ -1,6 +1,6 @@
 //! Entities that can take part in combat
 
-use crate::combat_mechanics::*;
+use crate::combat_statistics::*;
 use bevy::prelude::*;
 
 /// A marker component for the player entity
