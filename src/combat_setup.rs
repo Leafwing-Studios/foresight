@@ -1,5 +1,7 @@
 //! Transition in and out of combat
 
+use crate::combat_mechanics::{Damage, Life, Resource};
+use crate::creatures::{Enemy, Player};
 use crate::GameState;
 use bevy::prelude::*;
 
@@ -17,9 +19,17 @@ impl Plugin for CombatSetupPlugin {
 }
 
 fn spawn_player(mut commands: Commands) {
-    todo!()
+    commands
+        .spawn()
+        .insert(Life::new(10))
+        .insert(Damage::new(3, 5))
+        .insert(Player);
 }
 
 fn spawn_enemy(mut commands: Commands) {
-    todo!()
+    commands
+        .spawn()
+        .insert(Life::new(10))
+        .insert(Damage::new(6, 9))
+        .insert(Enemy);
 }

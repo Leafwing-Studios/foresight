@@ -9,7 +9,7 @@ pub struct Player;
 
 /// A marker component for the enemy entity
 #[derive(Component, Clone, Copy, Debug, PartialEq, Eq)]
-pub struct Entity;
+pub struct Enemy;
 
 /// A bundle containing everything needed to let a unit fight
 #[derive(Bundle)]

@@ -10,9 +10,7 @@ pub struct RNGPlugin;
 
 impl Plugin for RNGPlugin {
     fn build(&self, app: &mut App) {
-        app
-            .init_resource::<SimpleRNG>()
-            .init_resource::<RNGOutputs>();
+        app.init_resource::<Rng>().init_resource::<RNGOutputs>();
     }
 }
 
@@ -21,16 +19,16 @@ impl Plugin for RNGPlugin {
 ///
 /// Based on the SMW RNG function
 #[derive(Debug, Clone, PartialEq)]
-pub struct SimpleRNG {
+pub struct Rng {
     s: u8,
     t: u8,
 }
 
-impl SimpleRNG {
+impl Rng {
     /// Create a new RNG with the given internal state
     #[must_use]
     pub fn new(s: u8, t: u8) -> Self {
-        SimpleRNG { s, t }
+        Rng { s, t }
     }
 
     /// Generates a new random number between 0 and 255
@@ -47,7 +45,7 @@ impl SimpleRNG {
             s: self.s,
             t: self.t,
             result,
-        }
+        };
     }
 
     /// Advances the RNG once
@@ -69,7 +67,7 @@ impl SimpleRNG {
     }
 }
 
-impl Default for SimpleRNG {
+impl Default for Rng {
     fn default() -> Self {
         // In general, it is bad to always initialize your RNG function to the same value
         // But this isn't supposed to be a good RNG function >:3
@@ -91,9 +89,7 @@ impl Display for RNGInternals {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         f.write_fmt(format_args!(
             "{:03}, {:03}: {:03}",
-            self.s,
-            self.t,
-            self.result
+            self.s, self.t, self.result
         ))
     }
 }
@@ -109,7 +105,7 @@ pub struct RNGOutputs(pub ArrayDeque<[RNGInternals; RNG_BUFFER_SIZE]>);
 
 impl FromWorld for RNGOutputs {
     fn from_world(world: &mut World) -> Self {
-        let mut rng = world.get_resource_mut::<SimpleRNG>().unwrap();
+        let mut rng = world.get_resource_mut::<Rng>().unwrap();
         let mut buffer = RNGOutputs(ArrayDeque::new());
 
         for _ in 0..RNG_BUFFER_SIZE {
@@ -122,7 +118,7 @@ impl FromWorld for RNGOutputs {
 }
 
 /// Gets the "up next" RNG value from the ring buffer, then generates a new value to replace it
-pub fn get_next_rng_value(rng: &mut SimpleRNG, buffer: &mut RNGOutputs) -> u8 {
+pub fn get_next_rng_value(rng: &mut Rng, buffer: &mut RNGOutputs) -> u8 {
     let val = buffer.0[CURRENT_RNG_VALUE_INDEX].result;
     buffer.0.pop_front();
     buffer.0.push_back(rng.gen_verbose()).unwrap();
