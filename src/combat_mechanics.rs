@@ -1,6 +1,7 @@
 //! Structs and systems for core combat resolution
 
 pub use attributes::*;
+pub use damage::*;
 pub use derived_stats::*;
 pub use resources::*;
 
@@ -404,9 +405,9 @@ mod derived_stats {
 
     /// The chance to dodge an attack
     #[derive(Component, Clone, Debug, PartialEq, PartialOrd)]
-    pub struct Dodge(u8);
+    pub struct DodgeChance(u8);
 
-    impl Dodge {
+    impl DodgeChance {
         /// The base chance to dodge attacks
         const BASE: f32 = 10. / 100.;
 
@@ -417,7 +418,7 @@ mod derived_stats {
         pub fn new(agility: Agility) -> Self {
             let fraction: f32 = (Self::BASE + Self::SCALING * agility.0 as f32).clamp(0., 1.);
 
-            Dodge(255 * fraction as u8)
+            DodgeChance(255 * fraction as u8)
         }
 
         /// Given a provided `rng` input, is the attack dodged?
@@ -428,9 +429,9 @@ mod derived_stats {
 
     /// The chance to flee from combat
     #[derive(Component, Clone, Debug, PartialEq, PartialOrd)]
-    pub struct Flee(u8);
+    pub struct FleeChance(u8);
 
-    impl Flee {
+    impl FleeChance {
         /// The base chance to flee from combat
         const BASE: f32 = 10. / 100.;
 
@@ -441,7 +442,7 @@ mod derived_stats {
         pub fn new(agility: Agility) -> Self {
             let fraction: f32 = (Self::BASE + Self::SCALING * agility.0 as f32).clamp(0., 1.);
 
-            Flee(255 * fraction as u8)
+            FleeChance(255 * fraction as u8)
         }
 
         /// Given a provided `rng` input, is the attack dodged?
