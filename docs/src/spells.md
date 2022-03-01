@@ -1,58 +1,14 @@
 # Spells
 
-Spell fail chance is directly compared to the u8 rng value, rng must be >= the listed spell fail chance. Spells marked with an * are minor actions instead of major actions
+Spells that the player can learn over the course of the game. Spell fail percentages are given as the percent chance of *success*
 
-- polymorph
-  - 2 RNG
-  - Spell fail: 203
-  - Mana cost: 9
-  - Turns the enemy into a random, harmless creature. Options:
-    - Sheep: 20
-    - Frog: 10
-    - Mouse: 5
-    - Elephant: 500
-- power word: kill
+- Hemokinesis
+  - 2 AP, 4 mana, 80%
   - 1 RNG
-  - Spell fail: 255
-  - Mana cost: 15
-  - Instantly kills the opponent
-- confusion
-  - 1 RNG + ongoing
-  - Spell fail: 69
-  - Mana cost: 7
-  - Every time the enemy performs an action that targets the player, they have a 20% chance to hit themselves. Lasts 5 turns
-- lightning bolt
-  - 3 RNG (spell fail, damage, crit)
-  - Spell fail: 74
-  - Mana cost: 12
-  - 20-30 damage, uses normal crit chance
-- mana leak*
-  - 2 RNG (spell fail, mana reduced)
-  - Spell fail: 20
-  - Mana cost: 6
-  - Reduces enemy mana by 10-15
-- evasion*
+  - Lose 10 HP
+  - Gain regen: heal 3 hp/turn for 7 turns
+- Blood letting
+  - 1 AP, 8 mana, 50%
   - 1 RNG
-  - Spell fail: 35
-  - Mana cost: 4
-  - Increase dodge by 20% this turn
-- lucky strike*
-  - 1 RNG
-  - Spell fail: 35
-  - Mana cost: 5
-  - Increase crit chance by 25% this turn
-- bees
-  - 21 RNG (spell fail, coin flipx20)
-  - Spell fail: 66
-  - Mana cost: 11
-  - Flip a coin 20 times. For each heads, deal 2 damage
-- fire bolt*
-  - 3 RNG (spell fail, damage, crit)
-  - Spell fail: 76
-  - Mana cost: 2
-  - Deal 4-6 damage
-- super scan*
-  - 1 RNG
-  - Spell fail: 52
-  - Mana cost: 7
-  - It's a scan that reveals everything
+  - Heal 10 HP
+  - Gain bleeding: lose 4 hp/turn for 5 turns

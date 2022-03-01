@@ -17,18 +17,27 @@
 
 ## Plan
 
+- keep
+  - health
+  - mana
+  - leveling up
 - eliminate attributes
 - move to 3 AP (player only)
+- 1 AP for enemies
 - abilities have:
   - success or fail
     - opposed rolls for hitting and dodging
+      - attacker has a hit bonus based on weapon
+      - defender has a dodge bonus on their character
     - spell failure
     - saving throws
+    - always succeed, but random how *well* you succeed
   - costs
     - AP
     - mana
     - life
   - effect
+  - crit chance, if appropriate
 - special defenses
 - add persistent buffs and debuffs
   - can be operated on as a whole
@@ -42,5 +51,3 @@
 - UI
   - intro screen
     - type "start" to begin
-  - standard help syntax
-    - investigate specific actions to get detailed information
