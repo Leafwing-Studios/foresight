@@ -51,5 +51,3 @@
 - UI
   - intro screen
     - type "start" to begin
-  - standard help syntax
-    - investigate specific actions to get detailed information
