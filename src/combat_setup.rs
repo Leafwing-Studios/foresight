@@ -1,7 +1,7 @@
 //! Transition in and out of combat
 
 use crate::combat_statistics::{Damage, Life, Resource};
-use crate::creatures::{Enemy, Player};
+use crate::creatures::{Monster, Player};
 use crate::GameState;
 use bevy::prelude::*;
 
@@ -31,5 +31,5 @@ fn spawn_enemy(mut commands: Commands) {
         .spawn()
         .insert(Life::new(10))
         .insert(Damage::new(6, 9))
-        .insert(Enemy);
+        .insert(Monster);
 }

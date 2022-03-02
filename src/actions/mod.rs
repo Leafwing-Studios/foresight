@@ -6,6 +6,9 @@ use bevy::prelude::*;
 use bevy::utils::HashMap;
 use leafwing_terminal::*;
 
+mod available_actions;
+pub use available_actions::AvailableActions;
+
 mod attack;
 use attack::*;
 

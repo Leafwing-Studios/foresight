@@ -31,7 +31,7 @@ mod systems {
     use super::{Active, CurrentTurn, Inactive};
     use crate::actions::Actions;
     use crate::combat_statistics::ActionPoints;
-    use crate::creatures::{Enemy, Player};
+    use crate::creatures::{Monster, Player};
     use bevy::prelude::*;
 
     pub(super) fn end_turn_when_no_ap(
@@ -49,19 +49,19 @@ mod systems {
         mut commands: Commands,
         current_turn: Res<CurrentTurn>,
         player_query: Query<Entity, With<Player>>,
-        enemy_query: Query<Entity, With<Enemy>>,
+        monster_query: Query<Entity, With<Monster>>,
     ) {
         if current_turn.is_changed() {
             let player = player_query.single();
-            let enemy = enemy_query.single();
+            let monster = monster_query.single();
 
             match *current_turn {
                 CurrentTurn::Player => {
                     commands.entity(player).insert(Active).remove::<Inactive>();
-                    commands.entity(enemy).insert(Inactive).remove::<Active>();
+                    commands.entity(monster).insert(Inactive).remove::<Active>();
                 }
-                CurrentTurn::Enemy => {
-                    commands.entity(enemy).insert(Active).remove::<Inactive>();
+                CurrentTurn::Monster => {
+                    commands.entity(monster).insert(Active).remove::<Inactive>();
                     commands.entity(player).insert(Inactive).remove::<Active>();
                 }
             }
@@ -100,7 +100,7 @@ mod resources {
     #[derive(PartialEq, Clone, Copy, Debug)]
     pub enum CurrentTurn {
         Player,
-        Enemy,
+        Monster,
     }
 
     impl CurrentTurn {
@@ -108,8 +108,8 @@ mod resources {
         pub fn swap(&mut self) {
             use CurrentTurn::*;
             *self = match self {
-                Player => Enemy,
-                Enemy => Player,
+                Player => Monster,
+                Monster => Player,
             }
         }
     }
