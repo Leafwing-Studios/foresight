@@ -1,7 +1,7 @@
 //! Actions that can be used by both players and monsters
 
-use crate::combat_flow::CurrentTurn;
-use bevy::ecs::system::{Resource, System};
+use crate::system_sequence::SystemSeq;
+use bevy::ecs::system::Resource;
 use bevy::prelude::*;
 use bevy::utils::HashMap;
 use leafwing_terminal::*;
@@ -22,17 +22,15 @@ impl Plugin for ActionPlugin {
 /// An action that can be applied to the [`World`] in a step-by-step fashion
 pub struct Action {
     name: String,
-    systems: Vec<Box<dyn System<In = (), Out = ()>>>,
-    index: usize,
+    systems: SystemSeq,
 }
 
 impl Action {
     /// Creates a new [`Action`], whose `systems` will be applied to the [`World`] one step at a time
-    pub fn new(name: impl Into<String>, systems: Vec<Box<dyn System<In = (), Out = ()>>>) -> Self {
+    pub fn new(name: impl Into<String>, systems: SystemSeq) -> Self {
         Action {
             name: name.into(),
-            systems: systems.into(),
-            index: 0,
+            systems: systems,
         }
     }
 
@@ -45,29 +43,17 @@ impl Action {
 
     /// Applies the next step of the action to the [`World`], according to the provided vector of `systems`
     pub fn advance(&mut self, world: &mut World) {
-        if !self.finished() {
-            // Initialize the system before running it
-            self.systems[self.index].initialize(world);
-
-            // Run the system
-            self.systems[self.index].run((), world);
-
-            // Apply any commands generated
-            self.systems[self.index].apply_buffers(world);
-
-            // Advance to the next system
-            self.index += 1;
-        }
+        self.systems.run_next(world);
     }
 
     /// Is the action out of systems?
-    pub fn finished(&self) -> bool {
-        self.index >= self.systems.len()
+    pub fn is_finished(&self) -> bool {
+        self.systems.is_finished()
     }
 
     /// Resets the pattern of applied `systems` to the beginning of the supplied list
     pub fn reset(&mut self) {
-        self.index = 0;
+        self.systems.reset();
     }
 }
 

@@ -14,6 +14,7 @@ pub mod rng;
 pub mod ui;
 
 mod keyboard_variants;
+mod system_sequence;
 
 /// What's happening in the game?
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]

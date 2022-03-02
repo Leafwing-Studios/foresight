@@ -82,7 +82,7 @@ mod systems {
                     action.advance(world);
 
                     // Reset the state of the `Action` if it's complete
-                    if action.finished() {
+                    if action.is_finished() {
                         // Reset the current system back to the beginning
                         action.reset();
 

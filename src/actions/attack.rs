@@ -1,5 +1,5 @@
 use crate::actions::Action;
-use bevy::prelude::IntoSystem;
+use crate::system_sequence::SystemSeq;
 use leafwing_terminal::TerminalCommand;
 
 #[derive(TerminalCommand)]
@@ -11,11 +11,10 @@ impl Action {
     pub fn attack() -> Action {
         Action::new(
             "Attack",
-            vec![
-                Box::new(roll_hit.system()),
-                Box::new(roll_damage.system()),
-                Box::new(roll_crit.system()),
-            ],
+            SystemSeq::new()
+                .then(roll_hit)
+                .then(roll_damage)
+                .then(roll_crit),
         )
     }
 }
