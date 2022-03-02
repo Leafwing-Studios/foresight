@@ -23,6 +23,8 @@ impl Plugin for ActionPlugin {
 }
 
 /// An action that can be applied to the [`World`] in a step-by-step fashion
+// TODO: refactor to move Systems out into Actions
+// TODO: refactor to be a mega-enum
 pub struct Action {
     name: String,
     systems: SystemSeq,
