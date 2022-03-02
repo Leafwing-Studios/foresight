@@ -14,7 +14,6 @@ impl Plugin for CombatFlowPlugin {
     fn build(&self, app: &mut App) {
         // The player always goes first
         app.insert_resource(CurrentTurn::Player)
-            .init_resource::<CurrentAction>()
             .add_system_set_to_stage(
                 CoreStage::PreUpdate,
                 SystemGraph::new()
@@ -29,7 +28,8 @@ impl Plugin for CombatFlowPlugin {
 }
 
 mod systems {
-    use super::{Active, CurrentAction, CurrentTurn, Inactive};
+    use super::{Active, CurrentTurn, Inactive};
+    use crate::actions::Actions;
     use crate::combat_statistics::ActionPoints;
     use crate::creatures::{Enemy, Player};
     use crate::keyboard_variants::ANY_KEY;
@@ -72,12 +72,23 @@ mod systems {
     /// Runs the next system in the [`Action`] on the [`World`] when any keyboard button is pressed
     pub(super) fn advance_action(world: &mut World) {
         // Is an action active?
-        world.resource_scope(|world, current_action: Mut<CurrentAction>| {
-            if let Some(action) = current_action.action() {
+        world.resource_scope(|world, mut actions: Mut<Actions>| {
+            if let Some(action_name) = actions.current() {
                 let keyboard_input: &Input<KeyCode> = world.get_resource().unwrap();
 
                 if keyboard_input.any_just_pressed(ANY_KEY) {
+                    // Run the next system in the action on the world
+                    let action = actions.get_mut(action_name);
                     action.advance(world);
+
+                    // Reset the state of the `Action` if it's complete
+                    if action.finished() {
+                        // Reset the current system back to the beginning
+                        action.reset();
+
+                        // Clear the current action
+                        actions.clear();
+                    }
                 }
             }
         });
@@ -85,8 +96,6 @@ mod systems {
 }
 
 mod resources {
-    use crate::actions::Action;
-
     /// Whose turn is it?
     #[allow(missing_docs)]
     #[derive(PartialEq, Clone, Copy, Debug)]
@@ -103,29 +112,6 @@ mod resources {
                 Player => Enemy,
                 Enemy => Player,
             }
-        }
-    }
-
-    /// Which is action is currently being taken
-    #[derive(Default, Debug)]
-    pub struct CurrentAction {
-        action: Option<Box<dyn Action>>,
-    }
-
-    impl CurrentAction {
-        /// Gets the current action
-        pub fn action(&self) -> &Option<Box<dyn Action>> {
-            &self.action
-        }
-
-        /// Sets the current action
-        pub fn set_action(&mut self, action: impl Action) {
-            self.action = Some(Box::new(action));
-        }
-
-        /// Clears the current action because it is complete
-        fn clear(&mut self) {
-            self.action = None;
         }
     }
 }

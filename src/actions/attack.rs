@@ -1,18 +1,13 @@
 use crate::actions::Action;
-use bevy::prelude::*;
-use leafwing_terminal::*;
+use leafwing_terminal::TerminalCommand;
 
 #[derive(TerminalCommand)]
 #[terminal_command(name = "attack")]
 pub(super) struct AttackCommand;
 
-#[derive(Debug, Default)]
-pub struct AttackAction;
-
-impl Action for AttackAction {
-    fn name(&self) -> String {
-        "Attack".to_string()
+impl Action {
+    /// Creates a new [`Action`] that corresponds to an [`AttackCommand`]
+    pub fn attack() -> Action {
+        Action::new("Attack", Vec::default())
     }
-
-    fn advance(&self, _world: &mut World) {}
 }
