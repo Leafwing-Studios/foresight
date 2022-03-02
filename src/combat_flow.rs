@@ -32,7 +32,6 @@ mod systems {
     use crate::actions::Actions;
     use crate::combat_statistics::ActionPoints;
     use crate::creatures::{Enemy, Player};
-    use crate::keyboard_variants::ANY_KEY;
     use bevy::prelude::*;
 
     pub(super) fn end_turn_when_no_ap(
@@ -76,7 +75,7 @@ mod systems {
             if let Some(action_name) = actions.current() {
                 let keyboard_input: &Input<KeyCode> = world.get_resource().unwrap();
 
-                if keyboard_input.any_just_pressed(ANY_KEY) {
+                if keyboard_input.just_pressed(KeyCode::Return) {
                     // Run the next system in the action on the world
                     let action = actions.get_mut(action_name);
                     action.advance(world);
